@@ -65,7 +65,7 @@ disp(['Saving file to: ' fullfile(path,[file(1:end-3) 'gdf'])]);
 pop_writeeeg(EEG, fullfile(path,[file(1:end-3) 'gdf']), 'TYPE','GDF');
 
 
-offset=length(EEG.event)+1
+offset=length(EEG.event);
 for i=1:numOfDiscontinuity
     EEG.event(i+offset).type='DIS';
     EEG.event(i+offset).latency=discontinuity(i);
