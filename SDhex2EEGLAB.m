@@ -46,6 +46,8 @@ disp('Completed, please enter channel labels');
 prompt = {'Enter the channel labels'};
 dlgtitle = 'Channel labels';
 definput = {'Fp1,Fp2,C3,C4,T5,T6,O1,O2,F7,F8,F3,F4,T3,T4,P3,P4,MRK1,MRK2,AUX'};
+definput = {'F7,F3,Fz,F4,F8,T7,C3,Cz,C4,T8,P3,Pz,P4,O1,O2,POz,FCz,MRK1,MRK2,OPT1,OPT2'};
+
 %opts.Interpreter = 'tex';
 answer = inputdlg(prompt,dlgtitle,[1 80],definput);
 
@@ -61,11 +63,10 @@ end
 disp('Loading locations');
 EEG=pop_chanedit(EEG, 'lookup','standard-10-5-cap385.elp');
 
-disp(['Saving file to: ' fullfile(path,[file(1:end-3) 'gdf'])]);
-pop_writeeeg(EEG, fullfile(path,[file(1:end-3) 'gdf']), 'TYPE','GDF');
 
 
-offset=length(EEG.event);
+
+offset=0;%length(EEG.event)+1
 for i=1:numOfDiscontinuity
     EEG.event(i+offset).type='DIS';
     EEG.event(i+offset).latency=discontinuity(i);
@@ -73,7 +74,9 @@ for i=1:numOfDiscontinuity
     EEG.event(i+offset).urevent=0;
 end
 
+EEG = pop_saveset( EEG, 'filename',[file(1:end-3) 'set'],'filepath',path);
+%disp(['Saving file to: ' fullfile(path,[file(1:end-3) 'gdf'])]);
+%pop_writeeeg(EEG, fullfile(path,[file(1:end-3) 'gdf']), 'TYPE','GDF');
+
 disp('Opening EEGLAB...');
 eeglab redraw;
-
-
